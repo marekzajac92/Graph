@@ -19,8 +19,8 @@ public class TextFileReader implements Reader{
         try{
             script = new String();
             Scanner fileScanner = new Scanner(file);
-            for(String line; (line = fileScanner.nextLine()) != null;){
-                script += line;
+            while(fileScanner.hasNextLine()){
+                script += fileScanner.nextLine();
             }
         }
         catch(FileNotFoundException ex){
@@ -38,17 +38,22 @@ public class TextFileReader implements Reader{
     private String clearScript(String script){
         String scriptWithoutComments = new String();
         
-        int indexOpen = script.indexOf("/*");
+        /*int indexOpen = script.indexOf(Characters.OPEN_COMMENT);
+       // if(indexOpen == -1){
+       //     indexOpen = 1;
+        //}
         int indexClose = indexOpen;
-        scriptWithoutComments += script.substring(0, indexOpen-1);
-        while((indexClose = script.indexOf(Characters.CLOSE_COMMENT, indexOpen))!= -1 ||
-                (indexOpen = script.indexOf(Characters.OPEN_COMMENT, indexClose)) != -1){
-            scriptWithoutComments += script.substring(indexClose + 1, indexOpen - 1);
-        }
-        scriptWithoutComments += script.substring(indexClose, script.length()-1);
-        
-        scriptWithoutComments = scriptWithoutComments.replaceAll("\\s", "");
-        
+        if(indexOpen != -1){
+            scriptWithoutComments += script.substring(0, indexOpen-1);
+            while((indexClose = script.indexOf(Characters.CLOSE_COMMENT, indexOpen))!= -1 ||
+                    (indexOpen = script.indexOf(Characters.OPEN_COMMENT, indexClose)) != -1){
+                scriptWithoutComments += script.substring(indexClose + 1, indexOpen - 1);
+            }
+            scriptWithoutComments += script.substring(indexClose, script.length()-1);
+        }*/
+        scriptWithoutComments = script.replaceAll("\\s", "");
+       // scriptWithoutComments = scriptWithoutComments.replaceAll(".*(^/\\*)(\\*/$).*", "");
+        scriptWithoutComments = scriptWithoutComments.substring(1);
         return scriptWithoutComments;
     }
     
@@ -60,7 +65,7 @@ public class TextFileReader implements Reader{
     public String[] getBlocks(){
         script = clearScript(script);
         
-        String[] blocks = script.split("}");
+        String[] blocks = script.split(Characters.CLOSE_BLOCK);
         return blocks;
     }
 }

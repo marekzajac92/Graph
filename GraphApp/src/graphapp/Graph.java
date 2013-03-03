@@ -44,6 +44,10 @@ public class Graph {
         return vertexList.toArray(new Vertex[vertexList.size()]);
     }
     
+    public Edge[] getAllEdges(){
+        return edgeList.toArray(new Edge[edgeList.size()]);
+    }
+    
     public Edge[] getEdgesBySoruce(Vertex vertex){
         List<Edge> matchingEdges = new ArrayList<>();
         for(Edge e: edgeList){
