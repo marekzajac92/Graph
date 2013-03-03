@@ -15,12 +15,8 @@ public class GraphApp {
     public static void main(String[] args) {
         ScriptParser scriptP = new ScriptParser();
         Graph[] grafy = scriptP.parse(new TextFileReader(new File("graf.gs")));
-        
-        for(Graph g : grafy){
-            System.out.println(g.getName() + ":");
-            for(Edge e : g.getAllEdges()){
-                System.out.println(e.getSource().getLabel() + " : " + e.getTarget().getLabel());
-            }
-        }
+        System.out.println("Zapis...");
+        TextFileWriter writer = new TextFileWriter("drugi.gs");
+        writer.writeGraphs(grafy);
     }
 }
