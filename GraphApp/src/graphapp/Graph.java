@@ -5,6 +5,9 @@ import java.util.List;
 
 //klasa grafu
 public class Graph {
+    
+    private String name;
+    
     private int id;
     private List<Vertex> vertexList;
     private List<Edge> edgeList;
@@ -13,10 +16,19 @@ public class Graph {
         return id++;
     }
     
-    public Graph(){
+    public Graph(String name){
+        this.name = name;
         id = 0;
         vertexList = new ArrayList<>();
         edgeList = new ArrayList<>();
+    }
+    
+    public String getName(){
+        return name;
+    }
+    
+    public void setName(String name){
+        this.name = name;
     }
     
     public Vertex getVertexByLabel(String label){
@@ -26,6 +38,10 @@ public class Graph {
             }
         }
         return null;
+    }
+    
+    public Vertex[] getAllVertices(){
+        return vertexList.toArray(new Vertex[vertexList.size()]);
     }
     
     public Edge[] getEdgesBySoruce(Vertex vertex){
@@ -71,7 +87,7 @@ public class Graph {
         return matchingEdges.toArray(new Edge[matchingEdges.size()]);
     }
     
-    public boolean ContainsVertex(Vertex v){
+    public boolean containsVertex(Vertex v){
         return vertexList.contains(v);
     }
     
