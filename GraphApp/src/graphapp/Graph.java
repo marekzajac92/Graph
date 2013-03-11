@@ -95,14 +95,19 @@ public class Graph {
         return vertexList.contains(v);
     }
     
-    public void addVertex(String label){
-        vertexList.add(new Vertex(getNextId(), label));
+    public void addVertex(Vertex newVertex){
+        vertexList.add(newVertex);
     }
     
     public void addEdge(Edge newEdge){
         edgeList.add(newEdge);
     }
-    public void addEdge(Vertex source, Vertex target, boolean isDirected){
-        edgeList.add(new Edge(source, target, isDirected));
+    
+    public void removeVertex(Vertex vertex){
+        vertexList.remove(vertex);
+    }
+    
+    public void removeEdge(Edge edge){
+        edgeList.remove(edge);
     }
 }

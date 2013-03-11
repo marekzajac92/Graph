@@ -14,6 +14,7 @@ public class GraphApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        scriptParser = new ScriptParser();
         Menu menu = new Menu();
         
         menu.RunMenu(graphs, scriptParser, writer);

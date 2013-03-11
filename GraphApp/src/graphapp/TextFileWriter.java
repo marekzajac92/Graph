@@ -37,11 +37,11 @@ public class TextFileWriter implements Writer{
                     for(Edge edge : graph.getAllEdges()){
                         if(edge.isDirected()){
                             textToWrite = "\t" + Characters.NEW_DEDGE_COMMAND + 
-                                    Characters.END_COMMAND_SEPARATOR;
+                                    Characters.COMMAND_SEPARATOR;
                         }
                         else{
                             textToWrite = "\t" + Characters.NEW_UEDGE_COMMAND + 
-                                    Characters.END_COMMAND_SEPARATOR;
+                                    Characters.COMMAND_SEPARATOR;
                         }
                         textToWrite += edge.getSource().getLabel() + 
                                 Characters.ARGUMENTS_SEPARATOR + 

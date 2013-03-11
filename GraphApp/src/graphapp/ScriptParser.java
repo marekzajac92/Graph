@@ -54,44 +54,8 @@ public class ScriptParser {
             String[] commands = block.substring(0, index).split(Characters.COMMAND_SEPARATOR);
             
             GraphEx nextGraph = null;
-            switch(commands.length){ 
-                case 1:
-                    nextGraph = findGraph(commands[0]);
-                    break;
-                case 2:
-                    switch(commands[0]){
-                        case Characters.NEW_GRAPH_COMMAND:
-                            if(findGraph(commands[1]) != null){
-                                System.err.println("Graph already exist. Can't create new with this name.");
-                                break;
-                            }
-                            nextGraph = new GraphEx(new Graph(commands[1]), Characters.TYPE_MIX);
-                            graphs.add(nextGraph);
-                            break;
-                        default:
-                            System.err.println("Invalid command!");
-                            break;
-                    }
-                    break;
-                case 3:
-                    switch(commands[0]){
-                        case Characters.NEW_GRAPH_COMMAND:
-                            if(findGraph(commands[2]) != null){
-                                System.err.println("Graph already exist. Can't create new with this name.");
-                                break;
-                            }
-                            nextGraph = new GraphEx(new Graph(commands[2]), commands[1]);
-                            graphs.add(nextGraph);
-                            break;
-                        default:
-                            System.err.println("Invalid command!");
-                            break;
-                    }
-                    break;
-                default:
-                    System.err.println("Invalid number of command parameters!");
-                    break;
-            }
+            
+            getNextGraph(commands, nextGraph);
             
             if(nextGraph == null){
                 System.err.println("No graph!");
@@ -104,64 +68,93 @@ public class ScriptParser {
             
             for(String nextCommand : commands){
                 String[] command = nextCommand.split(Characters.COMMAND_SEPARATOR);
-                
-                switch(command.length){
+                analizeCommand(command, nextGraph);
+            }
+            
+        }
+        
+        return getAllGraphs();
+    }
+    
+    private void newVertex(Graph graph, String label){
+        graph.addVertex(new Vertex(label));
+    }
+    
+    private void newUEdge(String[] command, GraphEx nextGraph){
+        if(nextGraph.type.equals(Characters.TYPE_MIX) ||
+                nextGraph.type.equals(Characters.TYPE_UDIR)){
+            command = command[1].split(Characters.ARGUMENTS_SEPARATOR);
+            if(command.length != 2){
+                System.err.println("Invalid number of arguments!");
+                return;
+            }
+            Vertex source = nextGraph.graph.getVertexByLabel(command[0]);
+            Vertex target = nextGraph.graph.getVertexByLabel(command[1]);
+
+            if(source == null || target == null){
+                System.err.println("Vertex doesn't exist!");
+                return;
+            }
+            else if(source == target){
+                System.err.println("Source and target are the same vertex!");
+                return;
+            }
+
+            nextGraph.graph.addEdge(new Edge(source, target, false));
+        }
+        else{
+            System.err.println("Invalid type of edge! Graph is directed.");
+        }
+    }
+        
+        private void newDEdge(String[] command, GraphEx nextGraph){
+            if(nextGraph.type.equals(Characters.TYPE_MIX) ||
+                    nextGraph.type.equals(Characters.TYPE_DIR)){
+                command = command[1].split(Characters.ARGUMENTS_SEPARATOR);
+                if(command.length != 2){
+                    System.err.println("Invalid number of arguments!");
+                    return;
+                }
+                Vertex source = nextGraph.graph.getVertexByLabel(command[0]);
+                Vertex target = nextGraph.graph.getVertexByLabel(command[1]);
+
+                if(source == null || target == null){
+                    System.err.println("Vertex doesn't exist!");
+                    return;
+                }
+                else if(source == target){
+                    System.err.println("Source and target are the same vertex!");
+                    return;
+                }
+
+                nextGraph.graph.addEdge(new Edge(source, target, true));
+            }
+            else{
+                System.err.println("Invalid type of edge! Graph is undirected.");
+            }
+        }
+        
+        private void newGraph(String[] commands, GraphEx nextGraph){
+            if(findGraph(commands[2]) != null){
+                System.err.println("Graph already exist. Can't create new with this name.");
+                return;
+            }
+            nextGraph = new GraphEx(new Graph(commands[2]), commands[1]);
+            graphs.add(nextGraph);
+        }
+        
+        private void analizeCommand(String[] command, GraphEx nextGraph){
+            switch(command.length){
                     case 2:
                         switch(command[0]){
                             case Characters.NEW_VERTEX_COMMAND:
-                                nextGraph.graph.addVertex(command[1]);
+                                newVertex(nextGraph.graph, command[1]);
                                 break;
                             case Characters.NEW_UEDGE_COMMAND:
-                                if(nextGraph.type.equals(Characters.TYPE_MIX) ||
-                                        nextGraph.type.equals(Characters.TYPE_UDIR)){
-                                    command = command[1].split(Characters.ARGUMENTS_SEPARATOR);
-                                    if(command.length != 2){
-                                        System.err.println("Invalid number of arguments!");
-                                        break;
-                                    }
-                                    Vertex source = nextGraph.graph.getVertexByLabel(command[0]);
-                                    Vertex target = nextGraph.graph.getVertexByLabel(command[1]);
-                                    
-                                    if(source == null || target == null){
-                                        System.err.println("Vertex doesn't exist!");
-                                        break;
-                                    }
-                                    else if(source == target){
-                                        System.err.println("Source and target are the same vertex!");
-                                        break;
-                                    }
-                                    
-                                    nextGraph.graph.addEdge(source, target, false);
-                                }
-                                else{
-                                    System.err.println("Invalid type of edge! Graph is directed.");
-                                }
+                                newUEdge(command, nextGraph);
                                 break;
                             case Characters.NEW_DEDGE_COMMAND:
-                                if(nextGraph.type.equals(Characters.TYPE_MIX) ||
-                                        nextGraph.type.equals(Characters.TYPE_DIR)){
-                                    command = command[1].split(Characters.ARGUMENTS_SEPARATOR);
-                                    if(command.length != 2){
-                                        System.err.println("Invalid number of arguments!");
-                                        break;
-                                    }
-                                    Vertex source = nextGraph.graph.getVertexByLabel(command[0]);
-                                    Vertex target = nextGraph.graph.getVertexByLabel(command[1]);
-                                    
-                                    if(source == null || target == null){
-                                        System.err.println("Vertex doesn't exist!");
-                                        break;
-                                    }
-                                    else if(source == target){
-                                        System.err.println("Source and target are the same vertex!");
-                                        break;
-                                    }
-                                    
-                                    nextGraph.graph.addEdge(source, target, true);
-                                }
-                                else{
-                                    System.err.println("Invalid type of edge! Graph is undirected.");
-                                }
+                                newDEdge(command, nextGraph);
                                 break;
                             default:
                                 System.err.println("Invalid graph command!");
@@ -172,10 +165,37 @@ public class ScriptParser {
                         System.err.println("Invalid number parts of command!");
                         break;
                 }
-            }
-            
         }
         
-        return getAllGraphs();
-    }
+        private void getNextGraph(String[] commands, GraphEx nextGraph){
+            switch(commands.length){ 
+                case 1:
+                    nextGraph = findGraph(commands[0]);
+                    break;
+                case 2:
+                    switch(commands[0]){
+                        case Characters.NEW_GRAPH_COMMAND:
+                            commands = new String[]{commands[0], "MIX", commands[1]};
+                            newGraph(commands, nextGraph);
+                            break;
+                        default:
+                            System.err.println("Invalid command!");
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch(commands[0]){
+                        case Characters.NEW_GRAPH_COMMAND:
+                            newGraph(commands, nextGraph);
+                            break;
+                        default:
+                            System.err.println("Invalid command!");
+                            break;
+                    }
+                    break;
+                default:
+                    System.err.println("Invalid number of command parameters!");
+                    break;
+            }
+        }
 }

@@ -21,6 +21,8 @@ public class Characters {
     public static final String NEW_VERTEX_COMMAND = "#vertex";
     public static final String NEW_UEDGE_COMMAND = "#uedge";
     public static final String NEW_DEDGE_COMMAND = "#dedge";
+    public static final String REMOVE_VERTEX = "#removeVertex";
+    public static final String REMOVE_EDGE = "#removeEdge";
     
     public static final String TYPE_MIX = "MIX";
     public static final String TYPE_DIR = "DIR";
